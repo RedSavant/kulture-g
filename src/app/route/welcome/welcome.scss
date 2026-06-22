@@ -1,0 +1,90 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  background-image: url('/background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.logo {
+  width: clamp(60px, 30vw, 300px);
+  margin-bottom: -0.75rem;
+}
+
+.title {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.5rem, 8vw, 6rem);
+  color: #8100FF;
+  margin: 0;
+}
+
+.btn-zappy {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: clamp(0.875rem, 2vw, 1.125rem);
+  color: #fff;
+  background: #8100FF;
+  border: none;
+  border-radius: 14px;
+  padding: 0.625rem 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #5a00b3, 0 6px 12px rgba(0,0,0,0.15);
+  transition: transform 0.1s, box-shadow 0.1s;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.btn-zappy:hover {
+  transform: translateY(1px);
+  box-shadow: 0 2px 0 #5a00b3, 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.btn-zappy:active {
+  transform: translateY(4px);
+  box-shadow: 0 0px 0 #5a00b3, 0 2px 4px rgba(0,0,0,0.15);
+}
+
+@media (max-width: 480px) {
+.subtitle {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  font-size: clamp(1.125rem, 3.5vw, 2rem);
+  color: #fff;
+  margin: 0.75rem 0 0;
+  letter-spacing: 0.02em;
+}
+
+.btn-zappy {
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+  }
+}
