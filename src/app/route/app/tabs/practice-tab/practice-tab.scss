@@ -1,0 +1,29 @@
+.tab-page {
+  padding: 1rem;
+}
+
+h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+p {
+  margin: 0.45rem 0 1rem;
+  color: #667085;
+  font-size: 0.9rem;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chips span {
+  border-radius: 999px;
+  background: #f2e8ff;
+  color: #8100ff;
+  font-weight: 700;
+  padding: 0.45rem 0.75rem;
+  font-size: 0.82rem;
+}

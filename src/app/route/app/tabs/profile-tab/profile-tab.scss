@@ -1,0 +1,40 @@
+.tab-page {
+  padding: 1rem;
+}
+
+h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+p {
+  margin: 0.45rem 0 1rem;
+  color: #667085;
+  font-size: 0.9rem;
+}
+
+.profile-card {
+  border: 1px solid #eceef3;
+  border-radius: 1rem;
+  padding: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  background: #8100ff;
+  color: #ffffff;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+}
+
+small {
+  display: block;
+  color: #667085;
+  margin-top: 0.1rem;
+}

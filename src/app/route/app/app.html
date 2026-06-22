@@ -1,1 +1,31 @@
-<p>app works!</p>
+<div class="app-shell">
+  <section class="phone-screen">
+    <header class="phone-header">
+      <div class="brand-icon">
+        <img src="/logo.png" alt="Kulture G" />
+      </div>
+      <div class="brand-copy">
+        <p>Application mobile</p>
+        <h1>Kulture G</h1>
+      </div>
+    </header>
+
+    <main class="tab-content">
+      <ng-container *ngComponentOutlet="activeTab().component" />
+    </main>
+
+    <nav class="tab-bar" aria-label="Navigation principale">
+      @for (tab of tabs; track tab.id) {
+        <button
+          type="button"
+          class="tab-button"
+          [class.active]="activeTabId() === tab.id"
+          (click)="setActiveTab(tab.id)"
+        >
+          <span class="tab-icon">{{ tab.icon }}</span>
+          <span class="tab-label">{{ tab.label }}</span>
+        </button>
+      }
+    </nav>
+  </section>
+</div>
