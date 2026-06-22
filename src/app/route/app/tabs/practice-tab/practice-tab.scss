@@ -1,16 +1,18 @@
 .tab-page {
-  padding: 1rem;
+  padding: 1.25rem 1rem;
 }
 
 h2 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1c1c1e;
 }
 
 p {
-  margin: 0.45rem 0 1rem;
-  color: #667085;
-  font-size: 0.9rem;
+  margin: 0.35rem 0 1.25rem;
+  color: #8e8e93;
+  font-size: 0.85rem;
 }
 
 .chips {
@@ -21,9 +23,10 @@ p {
 
 .chips span {
   border-radius: 999px;
-  background: #f2e8ff;
-  color: #8100ff;
-  font-weight: 700;
-  padding: 0.45rem 0.75rem;
+  border: 1px solid #e5e5ea;
+  color: #1c1c1e;
+  font-weight: 500;
+  padding: 0.4rem 0.8rem;
   font-size: 0.82rem;
+  background: #ffffff;
 }
