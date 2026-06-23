@@ -9,7 +9,6 @@ type AppTabId = 'learn' | 'practice' | 'profile';
 interface AppTab {
   id: AppTabId;
   label: string;
-  icon: string;
   component: Type<unknown>;
 }
 
@@ -25,9 +24,9 @@ function createTab(tab: AppTab): AppTab {
 })
 export class App {
   protected readonly tabs: AppTab[] = [
-    createTab({ id: 'learn', label: 'Apprendre', icon: '🌱', component: LearnTab }),
-    createTab({ id: 'practice', label: 'Réviser', icon: '🎯', component: PracticeTab }),
-    createTab({ id: 'profile', label: 'Profil', icon: '🟣', component: ProfileTab }),
+    createTab({ id: 'learn', label: 'Apprendre', component: LearnTab }),
+    createTab({ id: 'practice', label: 'Réviser', component: PracticeTab }),
+    createTab({ id: 'profile', label: 'Profil', component: ProfileTab }),
   ];
 
   protected readonly activeTabId = signal<AppTabId>(this.tabs[0].id);

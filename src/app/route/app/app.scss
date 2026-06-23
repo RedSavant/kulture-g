@@ -9,7 +9,7 @@
   justify-content: center;
   align-items: center;
   padding: 0.5rem;
-  background: #e8e8ec;
+  background: #202020;
 }
 
 .phone-screen {
@@ -33,17 +33,17 @@
 }
 
 .brand-icon {
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: 0.65rem;
-  background: #1a1a2e;
+  flex-shrink: 0;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.85rem;
   display: grid;
   place-items: center;
 }
 
 .brand-icon img {
-  width: 1.4rem;
-  height: 1.4rem;
+  width: 3.2rem;
+  height: 3.2rem;
   object-fit: contain;
 }
 
@@ -91,8 +91,15 @@
 }
 
 .tab-icon {
-  font-size: 1.1rem;
-  line-height: 1;
+  display: grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.tab-icon svg {
+  width: 100%;
+  height: 100%;
 }
 
 .tab-label {
