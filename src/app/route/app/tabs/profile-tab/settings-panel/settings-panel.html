@@ -11,6 +11,27 @@
 
   <div class="panel-body">
     <div class="setting-group">
+      <label class="setting-label">Photo de profil</label>
+      <div class="pfp-row">
+        <div class="pfp-preview">
+          @if (pfpUrl) {
+            <img [src]="pfpUrl" alt="Photo de profil" />
+          } @else {
+            <span class="pfp-placeholder">{{ userService.userSignal()?.pseudo?.charAt(0) | uppercase }}</span>
+          }
+        </div>
+        <label class="pfp-upload-btn" [class.loading]="pfpUploading">
+          @if (pfpUploading) {
+            Chargement…
+          } @else {
+            Choisir une image
+          }
+          <input type="file" accept="image/png,image/jpeg,image/webp" (change)="onPfpSelected($event)" />
+        </label>
+      </div>
+    </div>
+
+    <div class="setting-group">
       <label class="setting-label">Changer de pseudo</label>
       <div class="pseudo-input-wrapper">
         <input

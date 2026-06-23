@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
+import { ThemeService } from '../../services/theme.service';
 import { LearnTab } from './tabs/learn-tab/learn-tab';
 import { PracticeTab } from './tabs/practice-tab/practice-tab';
 import { ProfileTab } from './tabs/profile-tab/profile-tab';
@@ -22,6 +23,7 @@ interface AppTab {
 export class App {
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
+  private readonly themeService = inject(ThemeService);
 
   constructor() {
     if (!this.userService.isLoggedIn()) {
