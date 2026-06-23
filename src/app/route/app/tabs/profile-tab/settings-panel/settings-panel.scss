@@ -55,6 +55,61 @@
   gap: 1.5rem;
 }
 
+.pfp-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pfp-preview {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 999px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--avatar-bg);
+  display: grid;
+  place-items: center;
+}
+
+.pfp-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pfp-placeholder {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+.pfp-upload-btn {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 0.6rem 1rem;
+  border-radius: 0.6rem;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  display: inline-block;
+}
+
+.pfp-upload-btn:hover {
+  opacity: 0.9;
+}
+
+.pfp-upload-btn.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.pfp-upload-btn input {
+  display: none;
+}
+
 .setting-group {
   display: flex;
   flex-direction: column;

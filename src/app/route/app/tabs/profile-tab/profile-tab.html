@@ -13,7 +13,13 @@
     </div>
 
     <div class="profile-card">
-      <div class="avatar">{{ user.pseudo.charAt(0) | uppercase }}</div>
+      <div class="avatar">
+        @if (user.pfp) {
+          <img [src]="user.pfp + '?t=' + (user.lastLoginAt | date:'yyyyMMddHHmmss')" alt="Photo de profil" />
+        } @else {
+          {{ user.pseudo.charAt(0) | uppercase }}
+        }
+      </div>
       <div>
         <strong>{{ user.pseudo }}</strong>
         <small>Niveau {{ user.level }}</small>

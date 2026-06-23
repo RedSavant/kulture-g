@@ -5,17 +5,22 @@ import {
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
 import express from 'express';
-import { join, dirname } from 'node:path';
+import { join, dirname, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { existsSync, mkdirSync, readFileSync, writeFileSync, unlinkSync } from 'node:fs';
 import crypto from 'node:crypto';
+import multer from 'multer';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = join(__dirname, '../browser');
 const dataDir = join(__dirname, '../../backend-data');
+const pfpDir = join(__dirname, '../../pfp-data');
 
 if (!existsSync(dataDir)) {
   mkdirSync(dataDir, { recursive: true });
+}
+if (!existsSync(pfpDir)) {
+  mkdirSync(pfpDir, { recursive: true });
 }
 
 const app = express();
@@ -27,7 +32,6 @@ function userFilePath(token: string): string {
   return join(dataDir, `${token}.json`);
 }
 
-// Créer un utilisateur
 app.post('/api/users', (req, res) => {
   const { pseudo } = req.body;
   if (!pseudo || typeof pseudo !== 'string' || !pseudo.trim()) {
@@ -48,7 +52,6 @@ app.post('/api/users', (req, res) => {
   res.status(201).json({ token, user });
 });
 
-// Récupérer un utilisateur par token
 app.get('/api/users/:token', (req, res) => {
   const { token } = req.params;
   const filePath = userFilePath(token);
@@ -64,7 +67,6 @@ app.get('/api/users/:token', (req, res) => {
   }
 });
 
-// Mettre à jour un utilisateur
 app.put('/api/users/:token', (req, res) => {
   const { token } = req.params;
   const filePath = userFilePath(token);
@@ -82,7 +84,6 @@ app.put('/api/users/:token', (req, res) => {
   }
 });
 
-// Supprimer un utilisateur
 app.delete('/api/users/:token', (req, res) => {
   const { token } = req.params;
   const filePath = userFilePath(token);
@@ -98,9 +99,64 @@ app.delete('/api/users/:token', (req, res) => {
   }
 });
 
-/**
- * Serve static files from /browser
- */
+app.post('/api/users/:token/pfp', (req, res) => {
+  const { token } = req.params;
+  const filePath = userFilePath(token);
+  if (!existsSync(filePath)) {
+    res.status(404).json({ error: 'Utilisateur introuvable' });
+    return;
+  }
+  const user = JSON.parse(readFileSync(filePath, 'utf-8'));
+  const userPfpDir = join(pfpDir, token);
+  if (!existsSync(userPfpDir)) {
+    mkdirSync(userPfpDir, { recursive: true });
+  }
+  const storage = multer.diskStorage({
+    destination: (_r, _f, cb) => cb(null, userPfpDir),
+    filename: (_r, file, cb) => cb(null, `pfp${extname(file.originalname) || '.png'}`),
+  });
+  const single = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } }).single('pfp');
+  single(req, res, (err) => {
+    if (err) {
+      res.status(400).json({ error: 'Erreur lors du téléchargement' });
+      return;
+    }
+    if (!req.file) {
+      res.status(400).json({ error: 'Aucun fichier fourni' });
+      return;
+    }
+    const pfpPath = `/api/users/${token}/pfp/file`;
+    user.pfp = pfpPath;
+    writeFileSync(filePath, JSON.stringify(user, null, 2));
+    res.json({ pfp: pfpPath });
+  });
+});
+
+app.get('/api/users/:token/pfp/file', (req, res) => {
+  const { token } = req.params;
+  const filePath = userFilePath(token);
+  if (!existsSync(filePath)) {
+    res.status(404).json({ error: 'Utilisateur introuvable' });
+    return;
+  }
+  const userPfpDir = join(pfpDir, token);
+  const pfpFile = join(userPfpDir, 'pfp.png');
+  const pfpJpg = join(userPfpDir, 'pfp.jpg');
+  const pfpJpeg = join(userPfpDir, 'pfp.jpeg');
+  const pfpWebp = join(userPfpDir, 'pfp.webp');
+  if (existsSync(pfpFile)) {
+    res.sendFile(pfpFile);
+  } else if (existsSync(pfpJpg)) {
+    res.sendFile(pfpJpg);
+  } else if (existsSync(pfpJpeg)) {
+    res.sendFile(pfpJpeg);
+  } else if (existsSync(pfpWebp)) {
+    res.sendFile(pfpWebp);
+  } else {
+    res.status(404).json({ error: 'Photo introuvable' });
+  }
+});
+
 app.use(
   express.static(browserDistFolder, {
     maxAge: '1y',
@@ -109,9 +165,6 @@ app.use(
   }),
 );
 
-/**
- * Handle all other requests by rendering the Angular application.
- */
 app.use((req, res, next) => {
   angularApp
     .handle(req)
@@ -121,22 +174,14 @@ app.use((req, res, next) => {
     .catch(next);
 });
 
-/**
- * Start the server if this module is the main entry point, or it is ran via PM2.
- * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
- */
 if (isMainModule(import.meta.url) || process.env['pm_id']) {
   const port = process.env['PORT'] || 4000;
   app.listen(port, (error) => {
     if (error) {
       throw error;
     }
-
     console.log(`Node Express server listening on http://localhost:${port}`);
   });
 }
 
-/**
- * Request handler used by the Angular CLI (for dev-server and during build) or Firebase Cloud Functions.
- */
 export const reqHandler = createNodeRequestHandler(app);

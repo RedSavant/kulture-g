@@ -16,6 +16,7 @@ export interface UserData {
   lessons: Record<string, LessonProgress>;
   createdAt: string;
   lastLoginAt: string;
+  pfp?: string;
 }
 
 const TOKEN_KEY = 'kulture_g_token';
@@ -102,6 +103,17 @@ export class UserService {
       lastScore: score,
     };
     this.saveUser();
+  }
+
+  uploadPfp(file: File): Observable<{ pfp: string }> {
+    const t = this.token;
+    const u = this.user();
+    if (!t || !u) throw new Error('Not logged in');
+    const fd = new FormData();
+    fd.append('pfp', file);
+    return this.http
+      .post<{ pfp: string }>(`${API_BASE}/users/${t}/pfp`, fd)
+      .pipe(tap((res) => this.user.update((d) => d ? { ...d, pfp: res.pfp } : null)));
   }
 
   updatePseudo(pseudo: string): void {
