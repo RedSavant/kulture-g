@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, Type, computed, signal } from '@angular/core';
+import { Component, Type, computed, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
+import { UserService } from '../../services/user.service';
 import { LearnTab } from './tabs/learn-tab/learn-tab';
 import { PracticeTab } from './tabs/practice-tab/practice-tab';
 import { ProfileTab } from './tabs/profile-tab/profile-tab';
@@ -23,6 +25,15 @@ function createTab(tab: AppTab): AppTab {
   styleUrl: './app.scss',
 })
 export class App {
+  private readonly router = inject(Router);
+  private readonly userService = inject(UserService);
+
+  constructor() {
+    if (!this.userService.isLoggedIn()) {
+      this.router.navigate(['/']);
+    }
+  }
+
   protected readonly tabs: AppTab[] = [
     createTab({ id: 'learn', label: 'Apprendre', component: LearnTab }),
     createTab({ id: 'practice', label: 'Réviser', component: PracticeTab }),

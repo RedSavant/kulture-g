@@ -1,11 +1,43 @@
-<section class="tab-page">
-  <h2>Profil</h2>
-  <p>Base du troisième onglet pour les réglages et statistiques.</p>
-  <div class="profile-card">
-    <div class="avatar">KG</div>
-    <div>
-      <strong>Utilisateur</strong>
-      <small>Niveau 1</small>
+@let user = userService.userSignal();
+
+@if (user) {
+  <section class="tab-page">
+    <h2>Profil</h2>
+
+    <div class="profile-card">
+      <div class="avatar">{{ user.pseudo.charAt(0) | uppercase }}</div>
+      <div>
+        <strong>{{ user.pseudo }}</strong>
+        <small>Niveau {{ user.level }}</small>
+      </div>
     </div>
-  </div>
-</section>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-value">{{ user.xp }} / {{ user.xpToNextLevel }}</span>
+        <span class="stat-label">XP</span>
+        <div class="xp-bar">
+          <div class="xp-fill" [style.width.%]="(user.xp / user.xpToNextLevel) * 100"></div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">{{ userService.getCompletedLessons() }}</span>
+        <span class="stat-label">Leçons réussies</span>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h3>Informations</h3>
+      <div class="info-row">
+        <span class="info-label">Membre depuis</span>
+        <span class="info-value">{{ user.createdAt | date:'longDate' }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Dernière connexion</span>
+        <span class="info-value">{{ user.lastLoginAt | date:'longDate' }}</span>
+      </div>
+    </div>
+
+    <button class="logout-btn" (click)="logout()">Se déconnecter</button>
+  </section>
+}

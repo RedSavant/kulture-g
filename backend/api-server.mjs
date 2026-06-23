@@ -1,9 +1,3 @@
-import {
-  AngularNodeAppEngine,
-  createNodeRequestHandler,
-  isMainModule,
-  writeResponseToNodeResponse,
-} from '@angular/ssr/node';
 import express from 'express';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -11,23 +5,19 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync, unlinkSync } from '
 import crypto from 'node:crypto';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const browserDistFolder = join(__dirname, '../browser');
-const dataDir = join(__dirname, '../../backend-data');
+const dataDir = join(__dirname, '..', 'backend-data');
 
 if (!existsSync(dataDir)) {
   mkdirSync(dataDir, { recursive: true });
 }
 
 const app = express();
-const angularApp = new AngularNodeAppEngine();
-
 app.use(express.json());
 
-function userFilePath(token: string): string {
+function userFilePath(token) {
   return join(dataDir, `${token}.json`);
 }
 
-// Créer un utilisateur
 app.post('/api/users', (req, res) => {
   const { pseudo } = req.body;
   if (!pseudo || typeof pseudo !== 'string' || !pseudo.trim()) {
@@ -48,7 +38,6 @@ app.post('/api/users', (req, res) => {
   res.status(201).json({ token, user });
 });
 
-// Récupérer un utilisateur par token
 app.get('/api/users/:token', (req, res) => {
   const { token } = req.params;
   const filePath = userFilePath(token);
@@ -64,7 +53,6 @@ app.get('/api/users/:token', (req, res) => {
   }
 });
 
-// Mettre à jour un utilisateur
 app.put('/api/users/:token', (req, res) => {
   const { token } = req.params;
   const filePath = userFilePath(token);
@@ -82,7 +70,6 @@ app.put('/api/users/:token', (req, res) => {
   }
 });
 
-// Supprimer un utilisateur
 app.delete('/api/users/:token', (req, res) => {
   const { token } = req.params;
   const filePath = userFilePath(token);
@@ -98,45 +85,7 @@ app.delete('/api/users/:token', (req, res) => {
   }
 });
 
-/**
- * Serve static files from /browser
- */
-app.use(
-  express.static(browserDistFolder, {
-    maxAge: '1y',
-    index: false,
-    redirect: false,
-  }),
-);
-
-/**
- * Handle all other requests by rendering the Angular application.
- */
-app.use((req, res, next) => {
-  angularApp
-    .handle(req)
-    .then((response) =>
-      response ? writeResponseToNodeResponse(response, res) : next(),
-    )
-    .catch(next);
+const port = process.env['API_PORT'] || 4000;
+app.listen(port, () => {
+  console.log(`API server listening on http://localhost:${port}`);
 });
-
-/**
- * Start the server if this module is the main entry point, or it is ran via PM2.
- * The server listens on the port defined by the `PORT` environment variable, or defaults to 4000.
- */
-if (isMainModule(import.meta.url) || process.env['pm_id']) {
-  const port = process.env['PORT'] || 4000;
-  app.listen(port, (error) => {
-    if (error) {
-      throw error;
-    }
-
-    console.log(`Node Express server listening on http://localhost:${port}`);
-  });
-}
-
-/**
- * Request handler used by the Angular CLI (for dev-server and during build) or Firebase Cloud Functions.
- */
-export const reqHandler = createNodeRequestHandler(app);
