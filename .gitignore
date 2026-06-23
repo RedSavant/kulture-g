@@ -6,6 +6,8 @@
 /out-tsc
 /bazel-out
 
+/public/user/*
+
 # Node
 /node_modules
 npm-debug.log
@@ -42,3 +44,5 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+backend-data/

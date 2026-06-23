@@ -1,0 +1,57 @@
+@let user = userService.userSignal();
+
+@if (user) {
+  <section class="tab-page">
+    <div class="page-header">
+      <h2>Profil</h2>
+      <button class="settings-icon" (click)="openSettings.emit()" aria-label="Paramètres">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="profile-card">
+      <div class="avatar">
+        @if (user.pfp) {
+          <img [src]="user.pfp + '?t=' + (user.lastLoginAt | date:'yyyyMMddHHmmss')" alt="Photo de profil" />
+        } @else {
+          {{ user.pseudo.charAt(0) | uppercase }}
+        }
+      </div>
+      <div>
+        <strong>{{ user.pseudo }}</strong>
+        <small>Niveau {{ user.level }}</small>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-value">{{ user.xp }} / {{ user.xpToNextLevel }}</span>
+        <span class="stat-label">XP</span>
+        <div class="xp-bar">
+          <div class="xp-fill" [style.width.%]="(user.xp / user.xpToNextLevel) * 100"></div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">{{ userService.getCompletedLessons() }}</span>
+        <span class="stat-label">Leçons réussies</span>
+      </div>
+    </div>
+
+    <div class="info-section">
+      <h3>Informations</h3>
+      <div class="info-row">
+        <span class="info-label">Membre depuis</span>
+        <span class="info-value">{{ user.createdAt | date:'longDate' }}</span>
+      </div>
+      <div class="info-row">
+        <span class="info-label">Dernière connexion</span>
+        <span class="info-value">{{ user.lastLoginAt | date:'longDate' }}</span>
+      </div>
+    </div>
+
+    <button class="logout-btn" (click)="logout()">Se déconnecter</button>
+  </section>
+}

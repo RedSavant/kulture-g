@@ -1,9 +1,3 @@
-import {
-  AngularNodeAppEngine,
-  createNodeRequestHandler,
-  isMainModule,
-  writeResponseToNodeResponse,
-} from '@angular/ssr/node';
 import express from 'express';
 import { join, dirname, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -12,9 +6,8 @@ import crypto from 'node:crypto';
 import multer from 'multer';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const browserDistFolder = join(__dirname, '../browser');
-const dataDir = join(__dirname, '../../backend-data');
-const pfpDir = join(__dirname, '../../pfp-data');
+const dataDir = join(__dirname, '..', 'backend-data');
+const pfpDir = join(__dirname, '..', 'pfp-data');
 
 if (!existsSync(dataDir)) {
   mkdirSync(dataDir, { recursive: true });
@@ -24,11 +17,9 @@ if (!existsSync(pfpDir)) {
 }
 
 const app = express();
-const angularApp = new AngularNodeAppEngine();
-
 app.use(express.json());
 
-function userFilePath(token: string): string {
+function userFilePath(token) {
   return join(dataDir, `${token}.json`);
 }
 
@@ -157,31 +148,7 @@ app.get('/api/users/:token/pfp/file', (req, res) => {
   }
 });
 
-app.use(
-  express.static(browserDistFolder, {
-    maxAge: '1y',
-    index: false,
-    redirect: false,
-  }),
-);
-
-app.use((req, res, next) => {
-  angularApp
-    .handle(req)
-    .then((response) =>
-      response ? writeResponseToNodeResponse(response, res) : next(),
-    )
-    .catch(next);
+const port = process.env['API_PORT'] || 4000;
+app.listen(port, () => {
+  console.log(`API server listening on http://localhost:${port}`);
 });
-
-if (isMainModule(import.meta.url) || process.env['pm_id']) {
-  const port = process.env['PORT'] || 4000;
-  app.listen(port, (error) => {
-    if (error) {
-      throw error;
-    }
-    console.log(`Node Express server listening on http://localhost:${port}`);
-  });
-}
-
-export const reqHandler = createNodeRequestHandler(app);
