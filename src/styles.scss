@@ -1,3 +1,31 @@
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9f9fb;
+  --text-primary: #1c1c1e;
+  --text-secondary: #8e8e93;
+  --border-color: #e5e5ea;
+  --accent: #8100FF;
+  --danger: #ff3b30;
+  --card-bg: #f9f9fb;
+  --avatar-bg: #1a1a2e;
+  --phone-bg: #ffffff;
+  --tab-bar-bg: #f9f9fb;
+}
+
+body.dark-theme {
+  --bg-primary: #000000;
+  --bg-secondary: #1c1c1e;
+  --text-primary: #ffffff;
+  --text-secondary: #8e8e93;
+  --border-color: #2c2c2e;
+  --accent: #bb86fc;
+  --danger: #ff453a;
+  --card-bg: #1c1c1e;
+  --avatar-bg: #2c2c2e;
+  --phone-bg: #000000;
+  --tab-bar-bg: #1c1c1e;
+}
+
 * {
   font-family: 'Outfit', sans-serif;
 }

@@ -104,6 +104,13 @@ export class UserService {
     this.saveUser();
   }
 
+  updatePseudo(pseudo: string): void {
+    const data = this.user();
+    if (!data) return;
+    data.pseudo = pseudo;
+    this.saveUser();
+  }
+
   logout(): void {
     const t = this.token;
     if (t) {

@@ -1,0 +1,45 @@
+<div class="overlay" (click)="close()"></div>
+<aside class="panel">
+  <div class="panel-header">
+    <h2>Paramètres</h2>
+    <button class="close-btn" (click)="close()" aria-label="Fermer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <path d="M18 6L6 18M6 6l12 12"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="panel-body">
+    <div class="setting-group">
+      <label class="setting-label">Changer de pseudo</label>
+      <div class="pseudo-input-wrapper">
+        <input
+          type="text"
+          class="pseudo-input"
+          [(ngModel)]="pseudo"
+          placeholder="Nouveau pseudo"
+          maxlength="20"
+        />
+        <button class="save-btn" (click)="savePseudo()">Sauvegarder</button>
+      </div>
+      @if (saved) {
+        <span class="save-feedback">Pseudo sauvegardé !</span>
+      }
+    </div>
+
+    <div class="setting-group">
+      <label class="setting-label">Thème</label>
+      <div class="theme-row">
+        <span class="theme-text">{{ themeService.isDark() ? 'Sombre' : 'Clair' }}</span>
+        <button
+          class="toggle-btn"
+          [class.active]="themeService.isDark()"
+          (click)="toggleTheme()"
+          aria-label="Basculer le thème"
+        >
+          <span class="toggle-knob"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</aside>

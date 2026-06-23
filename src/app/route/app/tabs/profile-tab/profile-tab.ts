@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../../../services/user.service';
@@ -12,6 +12,8 @@ import { UserService } from '../../../../services/user.service';
 export class ProfileTab {
   private readonly router = inject(Router);
   protected readonly userService = inject(UserService);
+
+  readonly openSettings = output<void>();
 
   logout(): void {
     this.userService.logout();

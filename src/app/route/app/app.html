@@ -10,7 +10,13 @@
     </header>
 
     <main class="tab-content">
-      <ng-container *ngComponentOutlet="activeTab().component" />
+      @if (activeTabId() === 'learn') {
+        <app-learn-tab class="tab-fade" />
+      } @else if (activeTabId() === 'practice') {
+        <app-practice-tab class="tab-fade" />
+      } @else if (activeTabId() === 'profile') {
+        <app-profile-tab class="tab-fade" (openSettings)="showSettings.set(true)" />
+      }
     </main>
 
     <nav class="tab-bar" aria-label="Navigation principale">
@@ -48,5 +54,9 @@
         </button>
       }
     </nav>
+
+    @if (showSettings()) {
+      <app-settings-panel (closePanel)="showSettings.set(false)" />
+    }
   </section>
 </div>
