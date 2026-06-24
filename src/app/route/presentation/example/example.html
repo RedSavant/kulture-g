@@ -19,9 +19,10 @@
           </svg>
         </div>
         <h2 class="start-title">Défi Culture</h2>
-        <p class="start-desc">Teste tes connaissances culturelles avec ce quiz !</p>
+        <p class="start-desc">Teste tes connaissances avec des quiz variés !</p>
         <button class="start-btn" (click)="startQuiz()">Commencer</button>
       </div>
+
     } @else if (showResult()) {
       <div class="quiz-result">
         <div class="result-icon">
@@ -59,54 +60,139 @@
         </div>
         <button class="retry-btn" (click)="restartQuiz()">Recommencer</button>
       </div>
+
     } @else {
       <div class="quiz-content">
         <div class="progress-bar">
           <div class="progress-fill" [style.width.%]="progress()"></div>
         </div>
-        <div class="question-counter">{{ currentQuestionIndex() + 1 }}/{{ totalQuestions }}</div>
+        <div class="question-meta">
+          <span class="question-counter">{{ currentIndex() + 1 }}/{{ totalQuestions }}</span>
+          <span class="question-type">{{ getTypeLabel() }}</span>
+        </div>
         <p class="question-text">{{ currentQuestion().question }}</p>
-        <div class="options">
-          @for (option of currentQuestion().options; track $index) {
-            @let isSelected = selectedAnswer() === $index;
-            @let isCorrectOption = $index === currentQuestion().correctIndex;
-            @let showFeedback = hasAnswered();
-            <button
-              class="option-btn"
-              [class.selected]="isSelected"
-              [class.correct]="showFeedback && isCorrectOption"
-              [class.wrong]="showFeedback && isSelected && !isCorrectOption"
-              [disabled]="hasAnswered()"
-              (click)="selectAnswer($index)"
-            >
-              <span class="option-letter">{{ ['A', 'B', 'C', 'D'][$index] }}</span>
-              <span class="option-text">{{ option }}</span>
-              @if (showFeedback && (isCorrectOption || (isSelected && !isCorrectOption))) {
-                <span class="option-icon">
-                  @if (isCorrectOption) {
-                    <svg viewBox="0 0 512 512" width="24" height="24" fill="none" stroke="#22c55e" stroke-width="48" stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="176 256 224 304 336 192"/>
-                    </svg>
-                  } @else {
-                    <svg viewBox="0 0 512 512" width="24" height="24" fill="none" stroke="#ef4444" stroke-width="48" stroke-linecap="round" stroke-linejoin="round">
-                      <line x1="184" y1="184" x2="328" y2="328"/>
-                      <line x1="328" y1="184" x2="184" y2="328"/>
-                    </svg>
+
+        @switch (currentQuestion().type) {
+          @case ('choice') {
+            <div class="options">
+              @for (option of currentOptions(); track $index) {
+                @let picked = choiceSelected() === $index;
+                @let isRight = $index === currentCorrectIndex();
+                <button
+                  class="option-btn"
+                  [class.selected]="picked && !submitted()"
+                  [class.correct]="submitted() && isRight"
+                  [class.wrong]="submitted() && picked && !isRight"
+                  [disabled]="submitted()"
+                  (click)="selectChoice($index)"
+                >
+                  <span class="option-letter">{{ ['A', 'B', 'C', 'D'][$index] }}</span>
+                  <span class="option-text">{{ option }}</span>
+                  @if (submitted() && (isRight || (picked && !isRight))) {
+                    <span class="option-icon">
+                      @if (isRight) {
+                        <svg viewBox="0 0 512 512" width="22" height="22" fill="none" stroke="#22c55e" stroke-width="48" stroke-linecap="round" stroke-linejoin="round">
+                          <polyline points="176 256 224 304 336 192"/>
+                        </svg>
+                      } @else {
+                        <svg viewBox="0 0 512 512" width="22" height="22" fill="none" stroke="#ef4444" stroke-width="48" stroke-linecap="round" stroke-linejoin="round">
+                          <line x1="184" y1="184" x2="328" y2="328"/>
+                          <line x1="328" y1="184" x2="184" y2="328"/>
+                        </svg>
+                      }
+                    </span>
                   }
-                </span>
+                </button>
+              }
+            </div>
+          }
+
+          @case ('fill') {
+            <div class="fill-area">
+              <span class="fill-hint">{{ currentHint() }}</span>
+            </div>
+            <div class="options">
+              @for (option of currentOptions(); track $index) {
+                @let picked = fillSelected() === $index;
+                @let isRight = $index === currentCorrectIndex();
+                <button
+                  class="option-btn"
+                  [class.selected]="picked && !submitted()"
+                  [class.correct]="submitted() && isRight"
+                  [class.wrong]="submitted() && picked && !isRight"
+                  [disabled]="submitted()"
+                  (click)="selectFill($index)"
+                >
+                  <span class="option-letter">{{ ['A', 'B', 'C', 'D'][$index] }}</span>
+                  <span class="option-text">{{ option }}</span>
+                  @if (submitted() && (isRight || (picked && !isRight))) {
+                    <span class="option-icon">
+                      @if (isRight) {
+                        <svg viewBox="0 0 512 512" width="22" height="22" fill="none" stroke="#22c55e" stroke-width="48" stroke-linecap="round" stroke-linejoin="round">
+                          <polyline points="176 256 224 304 336 192"/>
+                        </svg>
+                      } @else {
+                        <svg viewBox="0 0 512 512" width="22" height="22" fill="none" stroke="#ef4444" stroke-width="48" stroke-linecap="round" stroke-linejoin="round">
+                          <line x1="184" y1="184" x2="328" y2="328"/>
+                          <line x1="328" y1="184" x2="184" y2="328"/>
+                        </svg>
+                      }
+                    </span>
+                  }
+                </button>
+              }
+            </div>
+          }
+
+          @case ('truefalse') {
+            @let isTrueVal = isTrueStatement();
+            @let picked = truefalseSelected();
+            <div class="tf-options">
+              <button
+                class="tf-btn"
+                [class.selected]="picked === true && !submitted()"
+                [class.correct]="submitted() && isTrueVal"
+                [class.wrong]="submitted() && picked === true && !isTrueVal"
+                [disabled]="submitted()"
+                (click)="selectTrueFalse(true)"
+              >
+                <svg viewBox="0 0 512 512" width="28" height="28" fill="none" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M416 128L192 384l-96-96"/>
+                </svg>
+                Vrai
+              </button>
+              <button
+                class="tf-btn"
+                [class.selected]="picked === false && !submitted()"
+                [class.correct]="submitted() && !isTrueVal"
+                [class.wrong]="submitted() && picked === false && isTrueVal"
+                [disabled]="submitted()"
+                (click)="selectTrueFalse(false)"
+              >
+                <svg viewBox="0 0 512 512" width="28" height="28" fill="none" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="368" y1="144" x2="144" y2="368"/>
+                  <line x1="144" y1="144" x2="368" y2="368"/>
+                </svg>
+                Faux
+              </button>
+            </div>
+          }
+        }
+
+        <div class="actions">
+          @if (!submitted() && answerLocked()) {
+            <button class="check-btn" (click)="submitAnswer()">Vérifier</button>
+          }
+          @if (submitted()) {
+            <button class="continue-btn" (click)="nextQuestion()">
+              @if (currentIndex() < totalQuestions - 1) {
+                Continuer
+              } @else {
+                Voir les résultats
               }
             </button>
           }
         </div>
-        @if (hasAnswered()) {
-          <button class="continue-btn" (click)="nextQuestion()">
-            @if (currentQuestionIndex() < totalQuestions - 1) {
-              Continuer
-            } @else {
-              Voir les résultats
-            }
-          </button>
-        }
       </div>
     }
   </section>
