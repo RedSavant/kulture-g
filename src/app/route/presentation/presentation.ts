@@ -1,10 +1,10 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-presentation',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterModule],
   templateUrl: './presentation.html',
   styleUrl: './presentation.scss',
   encapsulation: ViewEncapsulation.None,

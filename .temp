@@ -1,0 +1,9 @@
+<section class="tab-page">
+  <h2>Parcours principal</h2>
+  <p>Base du premier onglet. Ajoute tes futurs composants ici.</p>
+  <div class="lesson-grid">
+    <article>Leçon 1</article>
+    <article>Leçon 2</article>
+    <article>Leçon 3</article>
+  </div>
+</section>
