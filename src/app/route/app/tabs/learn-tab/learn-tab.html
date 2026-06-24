@@ -1,15 +1,62 @@
 <section class="tab-page">
-  <h2>Parcours principal</h2>
-  <p>Base du premier onglet. Ajoute tes futurs composants ici.</p>
-  <div class="lesson-grid">
-    <article>Leçon 1</article>
-    <article>Leçon 2</article>
-    <article>Leçon 3</article>
-    <article>Leçon 4</article>
-    <article>Leçon 5</article>
-    <article>Leçon 6</article>
-    <article>Leçon 7</article>
-    <article>Leçon 8</article>
-    <article>Leçon 9</article>
-  </div>
+  @if (selectedLesson) {
+    <app-lesson [lesson]="selectedLesson" (close)="backToLessons()" />
+
+  } @else if (selectedTheme) {
+    <header class="sub-header">
+      <button class="back-btn" (click)="backToThemes()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        Thèmes
+      </button>
+      <h2>{{ selectedTheme.name }}</h2>
+    </header>
+    <div class="lesson-grid">
+      @for (lesson of selectedTheme.lessons; track lesson.id; let i = $index) {
+        @let locked = isLessonLocked(selectedTheme, i);
+        <article
+          class="lesson-card"
+          [class.locked]="locked"
+          (click)="selectLesson(lesson, locked)"
+        >
+          <span class="lesson-info">
+            <span class="lesson-title">{{ lesson.title }}</span>
+            <span class="lesson-count">{{ lesson.questions.length }} questions</span>
+          </span>
+          @if (locked) {
+            <span class="lesson-lock">
+              <svg viewBox="0 0 512 512" width="18" height="18" fill="none" stroke="currentColor" stroke-width="32" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="144" y="224" width="224" height="192" rx="24"/>
+                <path d="M176 224v-64a80 80 0 0 1 160 0v64"/>
+              </svg>
+            </span>
+          } @else if (isLessonCompleted(lesson.id)) {
+            <span class="lesson-check">
+              <svg viewBox="0 0 512 512" width="22" height="22" fill="none" stroke="#22c55e" stroke-width="48" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="176 256 224 304 336 192"/>
+              </svg>
+            </span>
+          }
+        </article>
+      }
+    </div>
+
+  } @else {
+    <h2>Parcours principal</h2>
+    <div class="theme-grid">
+      @for (theme of themes; track theme.name) {
+        <article class="theme-card" (click)="selectTheme(theme)">
+          <span class="theme-number">{{ $index + 1 }}</span>
+          <span class="theme-info">
+            <span class="theme-name">{{ theme.name }}</span>
+            <span class="theme-count">{{ getThemeCompletedCount(theme) }}/{{ theme.lessons.length }} leçons</span>
+          </span>
+          <div class="theme-progress-bar">
+            <div class="theme-progress-fill" [style.width.%]="getThemeProgress(theme)"></div>
+          </div>
+        </article>
+      }
+    </div>
+  }
 </section>

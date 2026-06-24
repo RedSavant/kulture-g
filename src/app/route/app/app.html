@@ -11,11 +11,11 @@
 
     <main class="tab-content">
       @if (activeTabId() === 'learn') {
-        <app-learn-tab class="tab-fade" />
+        <app-learn-tab class="tab-fade" [resetKey]="tabResetKey()" />
       } @else if (activeTabId() === 'practice') {
-        <app-practice-tab class="tab-fade" />
+        <app-practice-tab class="tab-fade" [resetKey]="tabResetKey()" />
       } @else if (activeTabId() === 'profile') {
-        <app-profile-tab class="tab-fade" (openSettings)="showSettings.set(true)" />
+        <app-profile-tab class="tab-fade" [resetKey]="tabResetKey()" (openSettings)="showSettings.set(true)" />
       }
     </main>
 

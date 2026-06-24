@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-practice-tab',
@@ -6,4 +6,6 @@ import { Component } from '@angular/core';
   templateUrl: './practice-tab.html',
   styleUrl: './practice-tab.scss',
 })
-export class PracticeTab {}
+export class PracticeTab {
+  readonly resetKey = input(0);
+}
