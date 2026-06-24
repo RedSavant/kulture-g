@@ -39,8 +39,12 @@ export class App {
 
   protected readonly activeTabId = signal<AppTabId>(this.tabs[0].id);
   protected readonly showSettings = signal(false);
+  protected readonly tabResetKey = signal(0);
 
   protected setActiveTab(tabId: AppTabId): void {
-    this.activeTabId.set(tabId);
+    if (this.activeTabId() !== tabId) {
+      this.activeTabId.set(tabId);
+    }
+    this.tabResetKey.update(k => k + 1);
   }
 }

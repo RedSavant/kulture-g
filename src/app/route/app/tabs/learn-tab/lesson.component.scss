@@ -1,0 +1,412 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.lesson-root {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.lesson-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem 0.75rem;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  width: fit-content;
+}
+
+.lesson-header h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Start screen */
+.quiz-start {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  gap: 1.5rem;
+  flex: 1;
+}
+
+.start-icon { margin-bottom: 0.5rem; }
+
+.start-desc {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  max-width: 280px;
+  line-height: 1.5;
+}
+
+.start-btn {
+  border: 0;
+  border-radius: 1rem;
+  background: var(--accent);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  padding: 0.9rem 2.5rem;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--accent) 70%, #000);
+}
+
+.start-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 color-mix(in srgb, var(--accent) 70%, #000);
+}
+
+.start-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--accent) 70%, #000);
+}
+
+/* Quiz content */
+.quiz-content {
+  display: flex;
+  flex-direction: column;
+  padding: 0 0.5rem 0.75rem;
+  gap: 0.75rem;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.progress-bar {
+  height: 0.5rem;
+  background: var(--border-color);
+  border-radius: 999px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.question-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.question-counter {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.question-type {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--card-bg));
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+}
+
+.question-text {
+  margin: 0.25rem 0 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* Options */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.option-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: 1rem;
+  background: var(--card-bg);
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-align: left;
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+}
+
+.option-btn:not(:disabled):hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--card-bg));
+}
+
+.option-btn:not(:disabled):active { transform: scale(0.98); }
+
+.option-btn.selected {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--card-bg));
+}
+
+.option-btn.correct {
+  border-color: #22c55e;
+  background: color-mix(in srgb, #22c55e 15%, var(--card-bg));
+}
+
+.option-btn.wrong {
+  border-color: #ef4444;
+  background: color-mix(in srgb, #ef4444 15%, var(--card-bg));
+}
+
+.option-btn:disabled { cursor: default; }
+
+.option-btn.correct:disabled,
+.option-btn.wrong:disabled { opacity: 1; }
+
+.option-letter {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.5rem;
+  background: var(--border-color);
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  transition: background 0.2s, color 0.2s;
+}
+
+.option-btn.selected .option-letter { background: var(--accent); color: #fff; }
+.option-btn.correct .option-letter { background: #22c55e; color: #fff; }
+.option-btn.wrong .option-letter { background: #ef4444; color: #fff; }
+
+.option-text { flex: 1; }
+
+.option-icon {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+}
+
+/* Fill */
+.fill-area {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.fill-hint {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: color-mix(in srgb, var(--accent) 10%, var(--card-bg));
+  border: 1px dashed var(--accent);
+  padding: 0.4rem 1rem;
+  border-radius: 0.6rem;
+}
+
+/* True/False */
+.tf-options {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex: 1;
+  align-items: center;
+}
+
+.tf-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem 2rem;
+  border: 2px solid var(--border-color);
+  border-radius: 1.2rem;
+  background: var(--card-bg);
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  transition: border-color 0.2s, background 0.2s, transform 0.15s;
+  min-width: 100px;
+}
+
+.tf-btn:not(:disabled):hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--card-bg));
+}
+
+.tf-btn:not(:disabled):active { transform: scale(0.96); }
+
+.tf-btn.selected {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, var(--card-bg));
+}
+
+.tf-btn.correct {
+  border-color: #22c55e;
+  background: color-mix(in srgb, #22c55e 15%, var(--card-bg));
+  color: #22c55e;
+}
+
+.tf-btn.wrong {
+  border-color: #ef4444;
+  background: color-mix(in srgb, #ef4444 15%, var(--card-bg));
+  color: #ef4444;
+}
+
+.tf-btn:disabled { cursor: default; }
+
+.tf-btn.correct:disabled,
+.tf-btn.wrong:disabled { opacity: 1; }
+
+/* Actions */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.check-btn,
+.continue-btn {
+  border: 0;
+  border-radius: 1rem;
+  background: var(--accent);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  padding: 0.9rem;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 0 color-mix(in srgb, var(--accent) 70%, #000);
+}
+
+.continue-btn { flex-shrink: 0; }
+
+.check-btn:hover,
+.continue-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 color-mix(in srgb, var(--accent) 70%, #000);
+}
+
+.check-btn:active,
+.continue-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--accent) 70%, #000);
+}
+
+/* Result screen */
+.quiz-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  text-align: center;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.result-icon { margin-bottom: 0.5rem; }
+
+.result-score {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.result-msg {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 260px;
+  line-height: 1.5;
+}
+
+.xp-earned {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fbbf24;
+}
+
+.result-stars {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.star {
+  font-size: 2.5rem;
+  color: var(--border-color);
+  transition: color 0.3s, transform 0.3s;
+}
+
+.star.filled {
+  color: #fbbf24;
+  transform: scale(1.1);
+}
+
+.retry-btn {
+  margin-top: 1rem;
+  padding: 0.9rem 2.5rem;
+  border: 2px solid var(--accent);
+  border-radius: 1rem;
+  background: transparent;
+  color: var(--accent);
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.retry-btn:hover { background: var(--accent); color: #fff; }
