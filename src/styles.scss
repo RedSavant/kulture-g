@@ -10,6 +10,8 @@
   --avatar-bg: #1a1a2e;
   --phone-bg: #ffffff;
   --tab-bar-bg: #f9f9fb;
+  --scrollbar-thumb: #d1d1d6;
+  --scrollbar-track: transparent;
 }
 
 body.dark-theme {
@@ -24,6 +26,8 @@ body.dark-theme {
   --avatar-bg: #2c2c2e;
   --phone-bg: #000000;
   --tab-bar-bg: #1c1c1e;
+  --scrollbar-thumb: #3a3a3c;
+  --scrollbar-track: transparent;
 }
 
 * {
