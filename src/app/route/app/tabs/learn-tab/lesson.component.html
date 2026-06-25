@@ -19,7 +19,11 @@
         </svg>
       </div>
       <p class="start-desc">{{ lesson().questions.length }} questions</p>
-      <button class="start-btn" (click)="startQuiz()">Commencer</button>
+      @if (!userService.hasHearts()) {
+        <p class="no-hearts-msg">Plus de cœurs ! Reviens dans une heure pour en récupérer un.</p>
+      } @else {
+        <button class="start-btn" (click)="startQuiz()">Commencer</button>
+      }
     </div>
 
   } @else if (showResult()) {
@@ -193,6 +197,26 @@
           </button>
         }
       </div>
+    </div>
+  }
+
+  @if (showExitConfirm()) {
+    <div class="exit-overlay" (click)="cancelExit()"></div>
+    <div class="exit-confirm">
+      <img src="/general-sad.png" alt="" class="exit-icon" />
+      <p class="exit-question">Tu veux partir ?</p>
+      <div class="exit-actions">
+        <button class="exit-btn stay" (click)="cancelExit()">Non</button>
+        <button class="exit-btn leave" (click)="confirmExit()">Oui</button>
+      </div>
+    </div>
+  }
+
+  @if (showNoHearts()) {
+    <div class="exit-overlay"></div>
+    <div class="exit-confirm">
+      <img src="/general-sad.png" alt="" class="exit-icon" />
+      <p class="exit-question">Désolé, tu n'as plus de vie !</p>
     </div>
   }
 </div>

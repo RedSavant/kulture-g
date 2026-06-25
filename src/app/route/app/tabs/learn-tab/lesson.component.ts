@@ -9,7 +9,7 @@ import { LessonData } from './lesson-data';
   styleUrl: './lesson.component.scss',
 })
 export class LessonComponent {
-  private readonly userService = inject(UserService);
+  protected readonly userService = inject(UserService);
 
   readonly lesson = input.required<LessonData>();
   readonly close = output<void>();
@@ -19,6 +19,8 @@ export class LessonComponent {
   submitted = signal(false);
   showResult = signal(false);
   quizStarted = signal(false);
+  showExitConfirm = signal(false);
+  showNoHearts = signal(false);
 
   choiceSelected = signal<number | null>(null);
   fillSelected = signal<number | null>(null);
@@ -46,6 +48,7 @@ export class LessonComponent {
   });
 
   startQuiz(): void {
+    if (!this.userService.hasHearts()) return;
     this.quizStarted.set(true);
   }
 
@@ -78,7 +81,15 @@ export class LessonComponent {
         correct = this.truefalseSelected() === q.isTrue;
         break;
     }
-    if (correct) this.score.update(s => s + 1);
+    if (correct) {
+      this.score.update(s => s + 1);
+    } else {
+      this.userService.loseHeart();
+      if (!this.userService.hasHearts()) {
+        this.showNoHearts.set(true);
+        setTimeout(() => this.confirmExit(), 4000);
+      }
+    }
     this.submitted.set(true);
   }
 
@@ -115,7 +126,20 @@ export class LessonComponent {
   }
 
   closeQuiz(): void {
+    if (this.quizStarted() && !this.showResult()) {
+      this.showExitConfirm.set(true);
+    } else {
+      this.close.emit();
+    }
+  }
+
+  confirmExit(): void {
+    this.showExitConfirm.set(false);
     this.close.emit();
+  }
+
+  cancelExit(): void {
+    this.showExitConfirm.set(false);
   }
 
   getScoreMessage(): string {
