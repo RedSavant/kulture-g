@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { ThemeService } from '../../services/theme.service';
@@ -20,7 +20,7 @@ interface AppTab {
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
-export class App {
+export class App implements OnInit, OnDestroy {
   private readonly router = inject(Router);
   private readonly userService = inject(UserService);
   private readonly themeService = inject(ThemeService);
@@ -30,6 +30,21 @@ export class App {
       this.router.navigate(['/']);
     }
   }
+
+  ngOnInit(): void {
+    this.userService.heartsLeft();
+    this.heartTimer = setInterval(() => this.userService.heartsLeft(), 60000);
+  }
+
+  ngOnDestroy(): void {
+    if (this.heartTimer) clearInterval(this.heartTimer);
+  }
+
+  private heartTimer: ReturnType<typeof setInterval> | null = null;
+
+  protected readonly hearts = this.userService.heartsSignal;
+
+  protected readonly maxHearts = 9;
 
   protected readonly tabs: AppTab[] = [
     { id: 'learn', label: 'Apprendre' },

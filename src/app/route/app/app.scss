@@ -33,6 +33,28 @@
   padding: 1rem;
 }
 
+.hearts-display {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.hearts-count {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #ff3b30;
+  min-width: 1ch;
+  text-align: center;
+}
+
+.heart-icon {
+  width: 1.4rem;
+  height: 1.4rem;
+  flex-shrink: 0;
+}
+
 .brand-icon {
   flex-shrink: 0;
   width: 3.5rem;

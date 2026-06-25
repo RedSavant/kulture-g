@@ -14,10 +14,15 @@ export interface UserData {
   xp: number;
   xpToNextLevel: number;
   lessons: Record<string, LessonProgress>;
+  hearts: number;
+  lastHeartRefill: string;
   createdAt: string;
   lastLoginAt: string;
   pfp?: string;
 }
+
+const MAX_HEARTS = 9;
+const HEART_REFILL_MS = 60 * 60 * 1000;
 
 const TOKEN_KEY = 'kulture_g_token';
 const API_BASE = '/api';
@@ -26,6 +31,7 @@ const API_BASE = '/api';
 export class UserService {
   private readonly user = signal<UserData | null>(null);
   readonly userSignal = this.user.asReadonly();
+  readonly heartsSignal = signal(MAX_HEARTS);
 
   constructor(private http: HttpClient) {
     this.loadUser();
@@ -105,6 +111,62 @@ export class UserService {
     this.saveUser();
   }
 
+  heartsLeft(): number {
+    this.initHearts();
+    this.refillHearts();
+    const h = this.user()?.hearts ?? MAX_HEARTS;
+    this.heartsSignal.set(h);
+    return h;
+  }
+
+  private initHearts(): void {
+    const data = this.user();
+    if (!data) return;
+    let changed = false;
+    if (data.hearts == null) {
+      data.hearts = MAX_HEARTS;
+      changed = true;
+    }
+    if (!data.lastHeartRefill) {
+      data.lastHeartRefill = new Date().toISOString();
+      changed = true;
+    }
+    if (changed) this.saveUser();
+  }
+
+  private refillHearts(): void {
+    const data = this.user();
+    if (!data || data.hearts >= MAX_HEARTS) return;
+
+    const now = Date.now();
+    const lastRefill = new Date(data.lastHeartRefill).getTime();
+    if (isNaN(lastRefill)) return;
+
+    const hoursPassed = Math.floor((now - lastRefill) / HEART_REFILL_MS);
+    if (hoursPassed < 1) return;
+
+    const newHearts = Math.min(MAX_HEARTS, data.hearts + hoursPassed);
+    const consumedHours = newHearts - data.hearts;
+
+    data.hearts = newHearts;
+    data.lastHeartRefill = new Date(lastRefill + consumedHours * HEART_REFILL_MS).toISOString();
+    this.saveUser();
+  }
+
+  loseHeart(): void {
+    const data = this.user();
+    if (!data || data.hearts <= 0) return;
+    data.hearts--;
+    this.heartsSignal.set(data.hearts);
+    this.saveUser();
+  }
+
+  hasHearts(): boolean {
+    this.initHearts();
+    this.refillHearts();
+    return (this.user()?.hearts ?? 0) > 0;
+  }
+
   uploadPfp(file: File): Observable<{ pfp: string }> {
     const t = this.token;
     const u = this.user();
@@ -124,10 +186,6 @@ export class UserService {
   }
 
   logout(): void {
-    const t = this.token;
-    if (t) {
-      this.http.delete(`${API_BASE}/users/${t}`).subscribe();
-    }
     if (typeof localStorage !== 'undefined') {
       localStorage.removeItem(TOKEN_KEY);
     }

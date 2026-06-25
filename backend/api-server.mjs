@@ -36,6 +36,8 @@ app.post('/api/users', (req, res) => {
     xp: 0,
     xpToNextLevel: 100,
     lessons: {},
+    hearts: 9,
+    lastHeartRefill: new Date().toISOString(),
     createdAt: new Date().toISOString(),
     lastLoginAt: new Date().toISOString(),
   };
