@@ -1,5 +1,7 @@
 # KultureG
 
+![App](https://raw.githubusercontent.com/RedSavant/kulture-g/refs/heads/main/public/show.png)
+
 ## Fait dans le cadre d'un stage chez Epitech Lyon
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.3.
